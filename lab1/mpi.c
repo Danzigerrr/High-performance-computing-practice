@@ -15,7 +15,7 @@ int main(int argc,char **argv) {
   struct timeval ins__tstart, ins__tstop;
 
   int myrank,nproc;
-  int is_prime_final;
+  int check_prime_final;
   
   MPI_Init(&argc,&argv);
 
@@ -30,9 +30,7 @@ int main(int argc,char **argv) {
 
   // run your computations here (including MPI communication)
 
-  // printf("heaaaapo\n");
-
-  int is_prime = 0;
+  int check_prime = 0;
   long i = myrank;
 
   // printf("myrank: %d\n", myrank);
@@ -43,26 +41,26 @@ int main(int argc,char **argv) {
 
     // corner cases
     // if (i == 0 || i == 1) {
-    //     is_prime++;
+    //      check_prime++;
     // }
 
     if(i > 1){
       int remainder = inputArgument % i;
       if(remainder == 0){
         // printf("can be didved by: %d\n", i);
-        is_prime++;
+        check_prime++;
         break;
       }
     }
     i = i + nproc;
   }
 
-  MPI_Reduce(&is_prime,&is_prime_final,1,
+  MPI_Reduce(&check_prime,&check_prime_final,1,
   MPI_INT,MPI_SUM,0,
   MPI_COMM_WORLD);
 
   if(!myrank){
-    if(is_prime_final != 0)
+    if(check_prime_final != 0)
       printf("\nis not prime\n");
     else
       printf("\nis prime\n");
